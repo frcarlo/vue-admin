@@ -1,6 +1,7 @@
 // Composables
 import { createRouter, createWebHistory } from "vue-router";
 import api from "@/api/index.js";
+import { useAppStore } from "@/store/app";
 
 const routes = [
   {
@@ -34,13 +35,23 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
+  const appStore = useAppStore();
+
   try {
     if (to.path !== "/login") {
-      const canAccess = await api.get("/profile");
+      await api.post(
+        "/profile",
+        {},
+        {
+          headers: {
+            Authorization: `JWT ${appStore.token}`,
+          },
+        },
+      );
     }
   } catch (error) {
-    console.log("ups");
+    s;
     if (error.response?.status == 401) return { name: "Login" };
   }
   // if (!canAccess) return "/login";

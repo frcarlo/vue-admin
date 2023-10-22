@@ -14,10 +14,7 @@ const option = {
 
 const mongoURI = process.env.MONGODB_URI;
 mongoose
-  .connect(
-    "mongodb://root:Enigma17@localhost:27017/?authMechanism=DEFAULT",
-    option
-  )
+  .connect("mongodb://localhost:27017/?authMechanism=DEFAULT", option)
   .then(
     function () {
       //connected successfully
@@ -51,13 +48,19 @@ app.use(function (req, res, next) {
     next();
   }
 });
-const routes = require("./api/routes/userRoutes");
-const apiRoutes = require("./api/routes/apiRoutes");
-routes(app);
-apiRoutes(app);
+require("./api/routes/userRoutes")(app);
+require("./api/routes/apiRoutes")(app);
 
 app.use(function (req, res) {
   res.status(404).send({ url: req.originalUrl + " not found" });
+});
+
+app.use(function (error, request, response, next) {
+  // Error handling middleware functionality
+  console.log(`error ${error.message}`); // log the error
+  const status = error.status || 400;
+  // send back an easily understandable error message to the caller
+  response.status(status).json({ error: true, message: error.message });
 });
 
 app.listen(port);
