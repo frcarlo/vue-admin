@@ -9,6 +9,7 @@ const express = require("express"),
     jsonwebtoken = require("jsonwebtoken");
 
 require('dotenv').config()
+const {registerUser} = require("./api/controllers/userController");
 const logger = require("./lib/Logger");
 const pinoHTTP = require('pino-http')
 const appPath = __dirname + '/app/';
@@ -44,11 +45,27 @@ mongoose
     .then(
         function () {
             //connected successfully
+            if (process.env.USER_EMAIL && rocess.env.USER_PASSWORD && process.env.USER_FULLNAME)
+                registerUser(
+                    {
+                        email: process.env.USER_EMAIL,
+                        password: process.env.USER_PASSWORD,
+                        fullName: process.env.USER_FULLNAME
+                    },
+                    process.env.USER_PASSWORD
+                )
+                    .then((data) => {
+                        console.log(data);
+
+                    })
+                    .catch(console.error);
         },
         function (err) {
             //err handle
         }
     );
+
+
 app.use(pinoHTTP({
     logger
 }))
