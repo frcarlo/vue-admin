@@ -20,7 +20,7 @@ const io = new Server(server,
     {
         cors: {
             origin: function (origin, callback) {
-                
+
                 if (whitelist.indexOf(origin) !== -1) {
 
                     callback(null, true)
@@ -49,11 +49,10 @@ mongoose
             //err handle
         }
     );
-/*app.use(pinoHTTP({
+app.use(pinoHTTP({
     logger
 }))
 
- */
 app.use(history({}));
 app.use(cors());
 app.use(express.urlencoded({extended: false}));
@@ -91,7 +90,7 @@ require("./api/routes/apiRoutes")(app);
 
 app.use(function (req, res) {
     console.log(`referer ${req.get('Referrer')}, url: ${req.url} not found`); // log the error
-    console.log(req)
+    //console.log(req)
     res.status(404).send({url: req.originalUrl + " not found"});
 });
 
