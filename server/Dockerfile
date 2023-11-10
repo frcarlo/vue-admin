@@ -21,6 +21,6 @@ RUN npm install
 
 # Bundle app source
 COPY . .
-HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
+#HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
 EXPOSE 3000
 CMD [ "node", "server.js" ]
