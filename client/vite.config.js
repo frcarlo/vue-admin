@@ -38,7 +38,7 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
-  base: process.env.MODE === "production" ? "/vue-admin/" : "/",
+  base: process.env.NODE_ENV === "production" ? "/vue-admin/" : "/",
   build: {
     outDir: "../server/app",
   },
