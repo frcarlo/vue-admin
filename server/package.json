@@ -1,13 +1,24 @@
 {
   "scripts": {
-    "start": "nodemon ./server.js"
+    "start": "nodemon ./server.js",
+    "build": "docker buildx build -t frcarlo/vue-admin ."
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "connect-history-api-fallback": "^2.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
     "mongoose": "^7.6.3",
-    "save": "^2.9.0"
+    "pino": "^8.16.1",
+    "pino-http": "^8.5.1",
+    "pino-pretty": "^10.2.3",
+    "save": "^2.9.0",
+    "socket.io": "^4.7.2"
   }
 }

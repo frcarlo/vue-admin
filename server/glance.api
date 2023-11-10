@@ -1,0 +1,1038 @@
+.. _api:
+
+API (Restfull/JSON) documentation
+=================================
+
+The Glances Restfull/API server could be ran using the following command line:
+
+.. code-block:: bash
+
+    # glances -w --disable-webui
+
+Note: Change request URL api/3 by api/2 if you use Glances 2.x.
+
+GET API status
+--------------
+
+This entry point should be used to check the API status.
+It will return nothing but a 200 return code if everythin is OK.
+
+Get the Rest API status::
+
+    # curl -I http://localhost:61208/api/3/status
+    "HTTP/1.0 200 OK"
+
+GET plugins list
+----------------
+
+Get the plugins list::
+
+    # curl http://localhost:61208/api/3/pluginslist
+    ["alert",
+     "amps",
+     "cloud",
+     "connections",
+     "containers",
+     "core",
+     "cpu",
+     "diskio",
+     "folders",
+     "fs",
+     "gpu",
+     "help",
+     "ip",
+     "irq",
+     "load",
+     "mem",
+     "memswap",
+     "network",
+     "now",
+     "percpu",
+     "ports",
+     "processcount",
+     "processlist",
+     "psutilversion",
+     "quicklook",
+     "raid",
+     "sensors",
+     "smart",
+     "system",
+     "uptime",
+     "wifi"]
+
+GET amps
+--------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/amps
+    [{"count": 0,
+      "countmax": None,
+      "countmin": 1.0,
+      "key": "name",
+      "name": "Dropbox",
+      "refresh": 3.0,
+      "regex": True,
+      "result": None,
+      "timer": 0.15077662467956543},
+     {"count": 0,
+      "countmax": 20.0,
+      "countmin": None,
+      "key": "name",
+      "name": "Python",
+      "refresh": 3.0,
+      "regex": True,
+      "result": None,
+      "timer": 0.15072154998779297}]
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/amps/name
+    {"name": ["Dropbox", "Python", "Conntrack", "Nginx", "Systemd", "SystemV"]}
+
+Get a specific item when field matchs the given value::
+
+    # curl http://localhost:61208/api/3/amps/name/Dropbox
+    {"Dropbox": [{"count": 0,
+                  "countmax": None,
+                  "countmin": 1.0,
+                  "key": "name",
+                  "name": "Dropbox",
+                  "refresh": 3.0,
+                  "regex": True,
+                  "result": None,
+                  "timer": 0.15077662467956543}]}
+
+GET connections
+---------------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/connections
+    {"net_connections_enabled": True, "nf_conntrack_enabled": True}
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/connections/net_connections_enabled
+    {"net_connections_enabled": True}
+
+GET core
+--------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/core
+    {"log": 16, "phys": 8}
+
+Fields descriptions:
+
+* **phys**: Number of physical cores (hyper thread CPUs are excluded) (unit is *number*)
+* **log**: Number of logical CPUs. A logical CPU is the number of physical cores multiplied by the number of threads that can run on each core (unit is *number*)
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/core/phys
+    {"phys": 8}
+
+GET cpu
+-------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/cpu
+    {"cpucore": 16,
+     "ctx_switches": 0,
+     "guest": 0.0,
+     "guest_nice": 0.0,
+     "idle": 97.0,
+     "interrupts": 0,
+     "iowait": 0.4,
+     "irq": 0.0,
+     "nice": 0.0,
+     "soft_interrupts": 0,
+     "softirq": 0.0,
+     "steal": 0.0,
+     "syscalls": 0,
+     "system": 0.6,
+     "time_since_update": 1,
+     "total": 2.4,
+     "user": 1.9}
+
+Fields descriptions:
+
+* **total**: Sum of all CPU percentages (except idle) (unit is *percent*)
+* **system**: percent time spent in kernel space. System CPU time is the time spent running code in the Operating System kernel (unit is *percent*)
+* **user**: CPU percent time spent in user space. User CPU time is the time spent on the processor running your program's code (or code in libraries) (unit is *percent*)
+* **iowait**: *(Linux)*: percent time spent by the CPU waiting for I/O operations to complete (unit is *percent*)
+* **dpc**: *(Windows)*: time spent servicing deferred procedure calls (DPCs) (unit is *percent*)
+* **idle**: percent of CPU used by any program. Every program or task that runs on a computer system occupies a certain amount of processing time on the CPU. If the CPU has completed all tasks it is idle (unit is *percent*)
+* **irq**: *(Linux and BSD)*: percent time spent servicing/handling hardware/software interrupts. Time servicing interrupts (hardware + software) (unit is *percent*)
+* **nice**: *(Unix)*: percent time occupied by user level processes with a positive nice value. The time the CPU has spent running users' processes that have been *niced* (unit is *percent*)
+* **steal**: *(Linux)*: percentage of time a virtual CPU waits for a real CPU while the hypervisor is servicing another virtual processor (unit is *percent*)
+* **ctx_switches**: number of context switches (voluntary + involuntary) per second. A context switch is a procedure that a computer's CPU (central processing unit) follows to change from one task (or process) to another while ensuring that the tasks do not conflict (unit is *number*)
+* **interrupts**: number of interrupts per second (unit is *number*)
+* **soft_interrupts**: number of software interrupts per second. Always set to 0 on Windows and SunOS (unit is *number*)
+* **syscalls**: number of system calls per second. Always 0 on Linux OS (unit is *number*)
+* **cpucore**: Total number of CPU core (unit is *number*)
+* **time_since_update**: Number of seconds since last update (unit is *seconds*)
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/cpu/total
+    {"total": 2.4}
+
+GET diskio
+----------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/diskio
+    [{"disk_name": "sda",
+      "key": "disk_name",
+      "read_bytes": 0,
+      "read_count": 0,
+      "time_since_update": 1,
+      "write_bytes": 0,
+      "write_count": 0},
+     {"disk_name": "nvme0n1",
+      "key": "disk_name",
+      "read_bytes": 0,
+      "read_count": 0,
+      "time_since_update": 1,
+      "write_bytes": 0,
+      "write_count": 0}]
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/diskio/disk_name
+    {"disk_name": ["sda",
+                   "nvme0n1",
+                   "nvme0n1p1",
+                   "nvme0n1p2",
+                   "sdb",
+                   "sdb1",
+                   "sdc",
+                   "sdc1",
+                   "sdd",
+                   "sde",
+                   "sde1"]}
+
+Get a specific item when field matchs the given value::
+
+    # curl http://localhost:61208/api/3/diskio/disk_name/sda
+    {"sda": [{"disk_name": "sda",
+              "key": "disk_name",
+              "read_bytes": 0,
+              "read_count": 0,
+              "time_since_update": 1,
+              "write_bytes": 0,
+              "write_count": 0}]}
+
+GET fs
+------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/fs
+    [{"device_name": "/dev/nvme0n1p2",
+      "free": 861341655040,
+      "fs_type": "ext4",
+      "key": "mnt_point",
+      "mnt_point": "/",
+      "percent": 7.6,
+      "size": 982314696704,
+      "used": 70998687744},
+     {"device_name": "/dev/sdc1",
+      "free": 14387634176,
+      "fs_type": "vfat",
+      "key": "mnt_point",
+      "mnt_point": "/run/media/frcarlo/EOS_2023081",
+      "percent": 11.8,
+      "size": 16308494336,
+      "used": 1920860160}]
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/fs/mnt_point
+    {"mnt_point": ["/",
+                   "/run/media/frcarlo/EOS_2023081",
+                   "/run/media/frcarlo/BACKUP",
+                   "/run/media/frcarlo/EOS_202308"]}
+
+Get a specific item when field matchs the given value::
+
+    # curl http://localhost:61208/api/3/fs/mnt_point//
+    {"/": [{"device_name": "/dev/nvme0n1p2",
+            "free": 861341655040,
+            "fs_type": "ext4",
+            "key": "mnt_point",
+            "mnt_point": "/",
+            "percent": 7.6,
+            "size": 982314696704,
+            "used": 70998687744}]}
+
+GET load
+--------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/load
+    {"cpucore": 16,
+     "min1": 0.38037109375,
+     "min15": 0.31640625,
+     "min5": 0.47607421875}
+
+Fields descriptions:
+
+* **min1**: Average sum of the number of processes waiting in the run-queue plus the number currently executing over 1 minute (unit is *float*)
+* **min5**: Average sum of the number of processes waiting in the run-queue plus the number currently executing over 5 minutes (unit is *float*)
+* **min15**: Average sum of the number of processes waiting in the run-queue plus the number currently executing over 15 minutes (unit is *float*)
+* **cpucore**: Total number of CPU core (unit is *number*)
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/load/min1
+    {"min1": 0.38037109375}
+
+GET mem
+-------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/mem
+    {"active": 8525721600,
+     "available": 22787526656,
+     "buffers": 542822400,
+     "cached": 3393961984,
+     "free": 22787526656,
+     "inactive": 4688470016,
+     "percent": 32.1,
+     "shared": 138989568,
+     "total": 33584373760,
+     "used": 10796847104}
+
+Fields descriptions:
+
+* **total**: Total physical memory available (unit is *bytes*)
+* **available**: The actual amount of available memory that can be given instantly to processes that request more memory in bytes; this is calculated by summing different memory values depending on the platform (e.g. free + buffers + cached on Linux) and it is supposed to be used to monitor actual memory usage in a cross platform fashion (unit is *bytes*)
+* **percent**: The percentage usage calculated as (total - available) / total * 100 (unit is *percent*)
+* **used**: Memory used, calculated differently depending on the platform and designed for informational purposes only (unit is *bytes*)
+* **free**: Memory not being used at all (zeroed) that is readily available; note that this doesn't reflect the actual memory available (use 'available' instead) (unit is *bytes*)
+* **active**: *(UNIX)*: memory currently in use or very recently used, and so it is in RAM (unit is *bytes*)
+* **inactive**: *(UNIX)*: memory that is marked as not used (unit is *bytes*)
+* **buffers**: *(Linux, BSD)*: cache for things like file system metadata (unit is *bytes*)
+* **cached**: *(Linux, BSD)*: cache for various things (unit is *bytes*)
+* **wired**: *(BSD, macOS)*: memory that is marked to always stay in RAM. It is never moved to disk (unit is *bytes*)
+* **shared**: *(BSD)*: memory that may be simultaneously accessed by multiple processes (unit is *bytes*)
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/mem/total
+    {"total": 33584373760}
+
+GET memswap
+-----------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/memswap
+    {"free": 0,
+     "percent": 0.0,
+     "sin": 0,
+     "sout": 0,
+     "time_since_update": 1,
+     "total": 0,
+     "used": 0}
+
+Fields descriptions:
+
+* **total**: Total swap memory (unit is *bytes*)
+* **used**: Used swap memory (unit is *bytes*)
+* **free**: Free swap memory (unit is *bytes*)
+* **percent**: Used swap memory in percentage (unit is *percent*)
+* **sin**: The number of bytes the system has swapped in from disk (cumulative) (unit is *bytes*)
+* **sout**: The number of bytes the system has swapped out from disk (cumulative) (unit is *bytes*)
+* **time_since_update**: Number of seconds since last update (unit is *seconds*)
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/memswap/total
+    {"total": 0}
+
+GET network
+-----------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/network
+    [{"alias": None,
+      "cumulative_cx": 1411074064,
+      "cumulative_rx": 705537032,
+      "cumulative_tx": 705537032,
+      "cx": 200,
+      "interface_name": "lo",
+      "is_up": True,
+      "key": "interface_name",
+      "rx": 100,
+      "speed": 0,
+      "time_since_update": 1,
+      "tx": 100},
+     {"alias": None,
+      "cumulative_cx": 195277985,
+      "cumulative_rx": 170369272,
+      "cumulative_tx": 24908713,
+      "cx": 0,
+      "interface_name": "enp8s0",
+      "is_up": True,
+      "key": "interface_name",
+      "rx": 0,
+      "speed": 1048576000,
+      "time_since_update": 1,
+      "tx": 0}]
+
+Fields descriptions:
+
+* **interface_name**: Interface name (unit is *string*)
+* **alias**: Interface alias name (optional) (unit is *string*)
+* **rx**: The received/input rate (in bit per second) (unit is *bps*)
+* **tx**: The sent/output rate (in bit per second) (unit is *bps*)
+* **cx**: The cumulative received+sent rate (in bit per second) (unit is *bps*)
+* **cumulative_rx**: The number of bytes received through the interface (cumulative) (unit is *bytes*)
+* **cumulative_tx**: The number of bytes sent through the interface (cumulative) (unit is *bytes*)
+* **cumulative_cx**: The cumulative number of bytes reveived and sent through the interface (cumulative) (unit is *bytes*)
+* **speed**: Maximum interface speed (in bit per second). Can return 0 on some operating-system (unit is *bps*)
+* **is_up**: Is the interface up ? (unit is *bool*)
+* **time_since_update**: Number of seconds since last update (unit is *seconds*)
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/network/interface_name
+    {"interface_name": ["lo",
+                        "enp8s0",
+                        "br-f7d6fea6edf0",
+                        "docker0",
+                        "br-ed6112826f47",
+                        "vethd54b0d0"]}
+
+Get a specific item when field matchs the given value::
+
+    # curl http://localhost:61208/api/3/network/interface_name/lo
+    {"lo": [{"alias": None,
+             "cumulative_cx": 1411074064,
+             "cumulative_rx": 705537032,
+             "cumulative_tx": 705537032,
+             "cx": 200,
+             "interface_name": "lo",
+             "is_up": True,
+             "key": "interface_name",
+             "rx": 100,
+             "speed": 0,
+             "time_since_update": 1,
+             "tx": 100}]}
+
+GET now
+-------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/now
+    "2023-10-28 07:57:05 CEST"
+
+GET percpu
+----------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/percpu
+    [{"cpu_number": 0,
+      "guest": 0.0,
+      "guest_nice": 0.0,
+      "idle": 29.0,
+      "iowait": 0.0,
+      "irq": 0.0,
+      "key": "cpu_number",
+      "nice": 0.0,
+      "softirq": 0.0,
+      "steal": 0.0,
+      "system": 0.0,
+      "total": 71.0,
+      "user": 0.0},
+     {"cpu_number": 1,
+      "guest": 0.0,
+      "guest_nice": 0.0,
+      "idle": 28.0,
+      "iowait": 0.0,
+      "irq": 0.0,
+      "key": "cpu_number",
+      "nice": 0.0,
+      "softirq": 0.0,
+      "steal": 0.0,
+      "system": 0.0,
+      "total": 72.0,
+      "user": 0.0}]
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/percpu/cpu_number
+    {"cpu_number": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]}
+
+GET processcount
+----------------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/processcount
+    {"pid_max": 0, "running": 1, "sleeping": 284, "thread": 2256, "total": 601}
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/processcount/total
+    {"total": 601}
+
+GET psutilversion
+-----------------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/psutilversion
+    [5, 9, 5]
+
+GET quicklook
+-------------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/quicklook
+    {"cpu": 2.4,
+     "cpu_hz": 4050000000.0,
+     "cpu_hz_current": 3124938812.5,
+     "cpu_name": "AMD Ryzen 7 3700X 8-Core Processor",
+     "mem": 32.1,
+     "percpu": [{"cpu_number": 0,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 29.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 71.0,
+                 "user": 0.0},
+                {"cpu_number": 1,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0},
+                {"cpu_number": 2,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 29.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 71.0,
+                 "user": 0.0},
+                {"cpu_number": 3,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0},
+                {"cpu_number": 4,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 29.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 71.0,
+                 "user": 0.0},
+                {"cpu_number": 5,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 29.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 71.0,
+                 "user": 0.0},
+                {"cpu_number": 6,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0},
+                {"cpu_number": 7,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 29.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 71.0,
+                 "user": 0.0},
+                {"cpu_number": 8,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0},
+                {"cpu_number": 9,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 29.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 71.0,
+                 "user": 0.0},
+                {"cpu_number": 10,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 20.0,
+                 "iowait": 1.0,
+                 "irq": 1.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 2.0,
+                 "total": 80.0,
+                 "user": 6.0},
+                {"cpu_number": 11,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0},
+                {"cpu_number": 12,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0},
+                {"cpu_number": 13,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 26.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 1.0,
+                 "total": 74.0,
+                 "user": 1.0},
+                {"cpu_number": 14,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0},
+                {"cpu_number": 15,
+                 "guest": 0.0,
+                 "guest_nice": 0.0,
+                 "idle": 28.0,
+                 "iowait": 0.0,
+                 "irq": 0.0,
+                 "key": "cpu_number",
+                 "nice": 0.0,
+                 "softirq": 0.0,
+                 "steal": 0.0,
+                 "system": 0.0,
+                 "total": 72.0,
+                 "user": 0.0}],
+     "swap": 0.0}
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/quicklook/cpu
+    {"cpu": 2.4}
+
+GET sensors
+-----------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/sensors
+    [{"critical": 84,
+      "key": "label",
+      "label": "Composite",
+      "type": "temperature_core",
+      "unit": "C",
+      "value": 48,
+      "warning": 79},
+     {"critical": None,
+      "key": "label",
+      "label": "Tctl",
+      "type": "temperature_core",
+      "unit": "C",
+      "value": 51,
+      "warning": None}]
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/sensors/label
+    {"label": ["Composite", "Tctl", "Tccd1", "nouveau 0", "nouveau 0"]}
+
+Get a specific item when field matchs the given value::
+
+    # curl http://localhost:61208/api/3/sensors/label/Composite
+    {"Composite": [{"critical": 84,
+                    "key": "label",
+                    "label": "Composite",
+                    "type": "temperature_core",
+                    "unit": "C",
+                    "value": 48,
+                    "warning": 79}]}
+
+GET system
+----------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/system
+    {"hostname": "monster",
+     "hr_name": "EndeavourOS 64bit",
+     "linux_distro": "EndeavourOS",
+     "os_name": "Linux",
+     "os_version": "6.5.8-arch1-1",
+     "platform": "64bit"}
+
+Get a specific field::
+
+    # curl http://localhost:61208/api/3/system/os_name
+    {"os_name": "Linux"}
+
+GET uptime
+----------
+
+Get plugin stats::
+
+    # curl http://localhost:61208/api/3/uptime
+    "23:08:21"
+
+GET all stats
+-------------
+
+Get all Glances stats::
+
+    # curl http://localhost:61208/api/3/all
+    Return a very big dictionnary (avoid using this request, performances will be poor)...
+
+GET stats history
+-----------------
+
+History of a plugin::
+
+    # curl http://localhost:61208/api/3/cpu/history
+    {"system": [["2023-10-28T07:57:05.763674", 0.6],
+                ["2023-10-28T07:57:06.887022", 0.6],
+                ["2023-10-28T07:57:07.895746", 0.6]],
+     "user": [["2023-10-28T07:57:05.763672", 1.9],
+              ["2023-10-28T07:57:06.887020", 1.9],
+              ["2023-10-28T07:57:07.895744", 0.6]]}
+
+Limit history to last 2 values::
+
+    # curl http://localhost:61208/api/3/cpu/history/2
+    {"system": [["2023-10-28T07:57:06.887022", 0.6],
+                ["2023-10-28T07:57:07.895746", 0.6]],
+     "user": [["2023-10-28T07:57:06.887020", 1.9],
+              ["2023-10-28T07:57:07.895744", 0.6]]}
+
+History for a specific field::
+
+    # curl http://localhost:61208/api/3/cpu/system/history
+    {"system": [["2023-10-28T07:57:05.763674", 0.6],
+                ["2023-10-28T07:57:06.887022", 0.6],
+                ["2023-10-28T07:57:07.895746", 0.6]]}
+
+Limit history for a specific field to last 2 values::
+
+    # curl http://localhost:61208/api/3/cpu/system/history
+    {"system": [["2023-10-28T07:57:06.887022", 0.6],
+                ["2023-10-28T07:57:07.895746", 0.6]]}
+
+GET limits (used for thresholds)
+--------------------------------
+
+All limits/thresholds::
+
+    # curl http://localhost:61208/api/3/all/limits
+    {"alert": {"history_size": 1200.0},
+     "amps": {"amps_disable": ["False"], "history_size": 1200.0},
+     "containers": {"containers_all": ["False"],
+                    "containers_disable": ["False"],
+                    "containers_max_name_size": 20.0,
+                    "history_size": 1200.0},
+     "core": {"history_size": 1200.0},
+     "cpu": {"cpu_ctx_switches_careful": 640000.0,
+             "cpu_ctx_switches_critical": 800000.0,
+             "cpu_ctx_switches_warning": 720000.0,
+             "cpu_disable": ["False"],
+             "cpu_iowait_careful": 5.0,
+             "cpu_iowait_critical": 6.25,
+             "cpu_iowait_warning": 5.625,
+             "cpu_steal_careful": 50.0,
+             "cpu_steal_critical": 90.0,
+             "cpu_steal_warning": 70.0,
+             "cpu_system_careful": 50.0,
+             "cpu_system_critical": 90.0,
+             "cpu_system_log": ["False"],
+             "cpu_system_warning": 70.0,
+             "cpu_total_careful": 65.0,
+             "cpu_total_critical": 85.0,
+             "cpu_total_log": ["True"],
+             "cpu_total_warning": 75.0,
+             "cpu_user_careful": 50.0,
+             "cpu_user_critical": 90.0,
+             "cpu_user_log": ["False"],
+             "cpu_user_warning": 70.0,
+             "history_size": 1200.0},
+     "diskio": {"diskio_disable": ["False"],
+                "diskio_hide": ["loop.*", "/dev/loop.*"],
+                "history_size": 1200.0},
+     "folders": {"folders_disable": ["False"], "history_size": 1200.0},
+     "fs": {"fs_careful": 50.0,
+            "fs_critical": 90.0,
+            "fs_disable": ["False"],
+            "fs_hide": ["/boot.*", "/snap.*"],
+            "fs_warning": 70.0,
+            "history_size": 1200.0},
+     "gpu": {"gpu_disable": ["False"],
+             "gpu_mem_careful": 50.0,
+             "gpu_mem_critical": 90.0,
+             "gpu_mem_warning": 70.0,
+             "gpu_proc_careful": 50.0,
+             "gpu_proc_critical": 90.0,
+             "gpu_proc_warning": 70.0,
+             "history_size": 1200.0},
+     "help": {"history_size": 1200.0},
+     "ip": {"history_size": 1200.0,
+            "ip_censys_fields": ["location:continent",
+                                 "location:country",
+                                 "autonomous_system:name"],
+            "ip_censys_url": ["https://search.censys.io/api"],
+            "ip_disable": ["False"],
+            "ip_public_ip_disabled": ["False"],
+            "ip_public_refresh_interval": 300.0},
+     "load": {"history_size": 1200.0,
+              "load_careful": 0.7,
+              "load_critical": 5.0,
+              "load_disable": ["False"],
+              "load_warning": 1.0},
+     "mem": {"history_size": 1200.0,
+             "mem_careful": 50.0,
+             "mem_critical": 90.0,
+             "mem_disable": ["False"],
+             "mem_warning": 70.0},
+     "memswap": {"history_size": 1200.0,
+                 "memswap_careful": 50.0,
+                 "memswap_critical": 90.0,
+                 "memswap_disable": ["False"],
+                 "memswap_warning": 70.0},
+     "network": {"history_size": 1200.0,
+                 "network_disable": ["False"],
+                 "network_rx_careful": 70.0,
+                 "network_rx_critical": 90.0,
+                 "network_rx_warning": 80.0,
+                 "network_tx_careful": 70.0,
+                 "network_tx_critical": 90.0,
+                 "network_tx_warning": 80.0},
+     "now": {"history_size": 1200.0},
+     "percpu": {"history_size": 1200.0,
+                "percpu_disable": ["False"],
+                "percpu_iowait_careful": 50.0,
+                "percpu_iowait_critical": 90.0,
+                "percpu_iowait_warning": 70.0,
+                "percpu_system_careful": 50.0,
+                "percpu_system_critical": 90.0,
+                "percpu_system_warning": 70.0,
+                "percpu_user_careful": 50.0,
+                "percpu_user_critical": 90.0,
+                "percpu_user_warning": 70.0},
+     "ports": {"history_size": 1200.0,
+               "ports_disable": ["False"],
+               "ports_port_default_gateway": ["True"],
+               "ports_refresh": 30.0,
+               "ports_timeout": 3.0},
+     "processcount": {"history_size": 1200.0, "processcount_disable": ["False"]},
+     "processlist": {"history_size": 1200.0,
+                     "processlist_cpu_careful": 50.0,
+                     "processlist_cpu_critical": 90.0,
+                     "processlist_cpu_warning": 70.0,
+                     "processlist_disable": ["False"],
+                     "processlist_mem_careful": 50.0,
+                     "processlist_mem_critical": 90.0,
+                     "processlist_mem_warning": 70.0,
+                     "processlist_nice_warning": ["-20",
+                                                  "-19",
+                                                  "-18",
+                                                  "-17",
+                                                  "-16",
+                                                  "-15",
+                                                  "-14",
+                                                  "-13",
+                                                  "-12",
+                                                  "-11",
+                                                  "-10",
+                                                  "-9",
+                                                  "-8",
+                                                  "-7",
+                                                  "-6",
+                                                  "-5",
+                                                  "-4",
+                                                  "-3",
+                                                  "-2",
+                                                  "-1",
+                                                  "1",
+                                                  "2",
+                                                  "3",
+                                                  "4",
+                                                  "5",
+                                                  "6",
+                                                  "7",
+                                                  "8",
+                                                  "9",
+                                                  "10",
+                                                  "11",
+                                                  "12",
+                                                  "13",
+                                                  "14",
+                                                  "15",
+                                                  "16",
+                                                  "17",
+                                                  "18",
+                                                  "19"]},
+     "psutilversion": {"history_size": 1200.0},
+     "quicklook": {"history_size": 1200.0,
+                   "quicklook_cpu_careful": 50.0,
+                   "quicklook_cpu_critical": 90.0,
+                   "quicklook_cpu_warning": 70.0,
+                   "quicklook_disable": ["False"],
+                   "quicklook_mem_careful": 50.0,
+                   "quicklook_mem_critical": 90.0,
+                   "quicklook_mem_warning": 70.0,
+                   "quicklook_percentage_char": ["|"],
+                   "quicklook_swap_careful": 50.0,
+                   "quicklook_swap_critical": 90.0,
+                   "quicklook_swap_warning": 70.0},
+     "sensors": {"history_size": 1200.0,
+                 "sensors_battery_careful": 80.0,
+                 "sensors_battery_critical": 95.0,
+                 "sensors_battery_warning": 90.0,
+                 "sensors_disable": ["False"],
+                 "sensors_refresh": 4.0,
+                 "sensors_temperature_core_careful": 60.0,
+                 "sensors_temperature_core_critical": 80.0,
+                 "sensors_temperature_core_warning": 70.0,
+                 "sensors_temperature_hdd_careful": 45.0,
+                 "sensors_temperature_hdd_critical": 60.0,
+                 "sensors_temperature_hdd_warning": 52.0},
+     "system": {"history_size": 1200.0,
+                "system_disable": ["False"],
+                "system_refresh": 60},
+     "uptime": {"history_size": 1200.0}}
+
+Limits/thresholds for the cpu plugin::
+
+    # curl http://localhost:61208/api/3/cpu/limits
+    {"cpu_ctx_switches_careful": 640000.0,
+     "cpu_ctx_switches_critical": 800000.0,
+     "cpu_ctx_switches_warning": 720000.0,
+     "cpu_disable": ["False"],
+     "cpu_iowait_careful": 5.0,
+     "cpu_iowait_critical": 6.25,
+     "cpu_iowait_warning": 5.625,
+     "cpu_steal_careful": 50.0,
+     "cpu_steal_critical": 90.0,
+     "cpu_steal_warning": 70.0,
+     "cpu_system_careful": 50.0,
+     "cpu_system_critical": 90.0,
+     "cpu_system_log": ["False"],
+     "cpu_system_warning": 70.0,
+     "cpu_total_careful": 65.0,
+     "cpu_total_critical": 85.0,
+     "cpu_total_log": ["True"],
+     "cpu_total_warning": 75.0,
+     "cpu_user_careful": 50.0,
+     "cpu_user_critical": 90.0,
+     "cpu_user_log": ["False"],
+     "cpu_user_warning": 70.0,
+     "history_size": 1200.0}
+

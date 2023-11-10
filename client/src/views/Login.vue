@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-center">
+  <div>
     <v-snackbar
       v-model="showSnack"
       multi-line
@@ -48,8 +48,8 @@
               type="submit"
               variant="tonal"
               :disabled="!formValid"
-              >Submit</v-btn
-            >
+              >Submit
+            </v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -58,8 +58,9 @@
 </template>
 
 <script setup>
-import { useAuth } from "@/composables/Api";
+import { useAuth } from "@/composables/Auth";
 import { ref, computed } from "vue";
+
 const formValid = ref(false);
 const username = ref(null);
 const password = ref(null);
@@ -75,7 +76,7 @@ const showSnack = computed({
     loginError.value = null;
   },
   get() {
-    return loginError.value ? true : false;
+    return !!loginError.value;
   },
 });
 

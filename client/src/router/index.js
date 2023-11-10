@@ -26,6 +26,15 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "home" */ "@/views/Login.vue"),
       },
+      {
+        path: "/backup",
+        name: "Backup",
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/views/Backup.vue"),
+      },
     ],
   },
 ];
@@ -51,7 +60,6 @@ router.beforeEach(async (to) => {
       );
     }
   } catch (error) {
-    s;
     if (error.response?.status == 401) return { name: "Login" };
   }
   // if (!canAccess) return "/login";

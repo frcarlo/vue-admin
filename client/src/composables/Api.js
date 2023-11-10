@@ -1,51 +1,37 @@
 import { useAppStore } from "@/store/app";
-import { ref, toValue } from "vue";
+import { ref, toValue, computed } from "vue";
 import api from "@/api/index";
-import { useRouter } from "vue-router";
 
-export function useAuth() {
-  const appStore = useAppStore();
-  const router = useRouter();
+export function useApi() {
+  const app = useAppStore();
   const data = ref(null);
+  const response = ref(null);
+  const loading = ref(false);
   const error = ref(null);
 
-  const logOutUser = (payload) => {
-    // reset state before fetching..
-    data.value = null;
+  const post = async (url, payload) => {
     error.value = null;
-    // toValue() unwraps potential refs or getters
+    loading.value = true;
 
-    api
-      .post(import.meta.env.VITE_LOGOUT_URL, payload)
-      .then((response) => {
-        if (response.data?.token) {
-          appStore.token = null;
-          data.value = response.data;
-          router.push("/login");
-        }
-      })
-      .catch((err) => (error.value = err));
+    console.log("execute: ", `${import.meta.env.VITE_API_URL}/${toValue(url)}`);
+    try {
+      const result = await api.post(
+        `${import.meta.env.VITE_API_URL}/${toValue(url)}`,
+        payload,
+        {
+          headers: {
+            Authorization: `JWT ${app.token}`,
+          },
+        },
+      );
+      response.value = result;
+      data.value = result.data;
+    } catch (error) {
+      error.value = error;
+    } finally {
+      loading.value = false;
+    }
   };
 
-  const loginUser = (payload) => {
-    // reset state before fetching..
-    data.value = null;
-    error.value = null;
-    // toValue() unwraps potential refs or getters
-
-    api
-      .post(toValue(import.meta.env.VITE_LOGIN_URL), payload, {
-        headers: {},
-      })
-      .then((response) => {
-        if (response.data?.token) {
-          appStore.token = response.data.token;
-          data.value = response.data;
-          router.push("/");
-        }
-      })
-      .catch((err) => (error.value = err));
-  };
-
-  return { data, error, loginUser, logOutUser };
+  return { data, error, loading, response, post };
 }

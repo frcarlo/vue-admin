@@ -1,0 +1,202 @@
+api
+hostcommand.sh
+node_modules
+nohup.out
+package.json
+package-lock.json
+register.js
+server.js
+vueadmin-in
+vueadmin-out
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]
+[
+  {
+    "label": null,
+    "mountpoint": null,
+    "path": "/dev/sdc1",
+    "size": "512M",
+    "rm": false,
+    "fstype": "vfat",
+    "name": "sdc1",
+    "type": "part",
+    "hotplug": true
+  },
+  {
+    "label": null,
+    "mountpoint": "/run/media/frcarlo/853f781f-aa6f-452c-8448-c5c856f689f0",
+    "path": "/dev/sdc2",
+    "size": "232,4G",
+    "rm": false,
+    "fstype": "ext4",
+    "name": "sdc2",
+    "type": "part",
+    "hotplug": true
+  }
+]

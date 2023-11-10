@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  vue-admin:
+    image: frcarlo/vue-admin
+    network_mode: host
+    hostname: vue-admin
+    container_name: VueAdmin
+    restart: always
+    privileged: true
+    # pid: host
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      PORT: 3002
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      GLANCE_URL: "http://cloud.local:61208"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/hostroot:ro
