@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: import.meta.env.DEV
-    ? import.meta.env.VITE_DEV_BASE_URL
-    : import.meta.env.BASE_URL,
+  baseURL:
+    import.meta.env.DEV === true
+      ? import.meta.env.VITE_API_BASE_URL
+      : import.meta.env.BASE_URL,
 });
 
 instance.interceptors.response.use(

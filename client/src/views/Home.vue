@@ -272,7 +272,7 @@ const alertMessage = computed(() => {
         message: `Alerts detected`,
         icon: "mdi-alert",
         color: "error",
-        data: data.sensors.alert,
+        data: data.value.sensors.alert,
       };
   }
   return {

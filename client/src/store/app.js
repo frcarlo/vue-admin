@@ -13,6 +13,12 @@ export const useAppStore = defineStore("app", () => {
     router.push("/login");
   };
 
+  const base_url = ref(
+    import.meta.env.DEV === true
+      ? import.meta.env.VITE_API_BASE_URL
+      : import.meta.env.BASE_URL,
+  );
+
   const connected = computed(() => (socket_id.value ? true : false));
   const socketState = (socket = null) => {
     if (!socket) {
@@ -26,5 +32,13 @@ export const useAppStore = defineStore("app", () => {
     return !!token.value;
   });
 
-  return { logout, token, signedIn, socketState, socket_id, connected };
+  return {
+    logout,
+    token,
+    signedIn,
+    socketState,
+    socket_id,
+    connected,
+    base_url,
+  };
 });

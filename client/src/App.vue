@@ -24,14 +24,14 @@ import { watch, ref } from "vue";
 import { useSocket } from "@/composables/Socket";
 
 const showSnack = ref(false);
-console.log("Connect to socket:" + import.meta.env.BASE_URL);
+
 const socket = useSocket(`${import.meta.env.BASE_URL}`, [
   {
     name: "message",
     fn: (ev) => ev.data,
   },
 ]);
-console.log(socket.state.value.message);
+
 watch(
   () => socket.state.value.message,
   (value) => {
