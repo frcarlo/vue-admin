@@ -6,6 +6,7 @@ const express = require("express"),
     port = process.env.PORT || 3000,
     User = require("./api/models/userModel"),
     history = require('connect-history-api-fallback'),
+    rewrite = require("express-urlrewrite"),
     jsonwebtoken = require("jsonwebtoken");
 
 require('dotenv').config()
@@ -70,6 +71,7 @@ if (process.env.NODE_ENV !== "development")
         logger
     }))
 
+app.use(rewrite("/vue-admin/*", "/$1"));
 app.use(history({}));
 app.use(cors());
 app.use(express.urlencoded({extended: false}));
