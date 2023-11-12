@@ -12,18 +12,14 @@ export function useApi() {
   const post = async (url, payload) => {
     error.value = null;
     loading.value = true;
-
-    console.log("execute: ", `${import.meta.env.VITE_API_URL}/${toValue(url)}`);
+    const base_url = app.base_url;
+    console.log("execute: ", `${base_url}/${toValue(url)}`);
     try {
-      const result = await api.post(
-        `${import.meta.env.VITE_API_URL}/${toValue(url)}`,
-        payload,
-        {
-          headers: {
-            Authorization: `JWT ${app.token}`,
-          },
+      const result = await api.post(`${base_url}/${toValue(url)}`, payload, {
+        headers: {
+          Authorization: `JWT ${app.token}`,
         },
-      );
+      });
       response.value = result;
       data.value = result.data;
     } catch (error) {

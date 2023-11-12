@@ -283,7 +283,11 @@ const alertMessage = computed(() => {
   };
 });
 const getList = async () => {
-  await post("perfmon?sensors=cpu,system,alert,ip,quicklook,docker");
+  await post(
+    `${
+      import.meta.env.VITE_API_URL
+    }/perfmon?sensors=cpu,system,alert,ip,quicklook,docker`,
+  );
   setDistance();
 };
 </script>

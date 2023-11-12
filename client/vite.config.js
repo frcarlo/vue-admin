@@ -41,11 +41,10 @@ export default defineConfig(({ command, mode }) => {
       },
       extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
     },
-    /*   base:
-         env.NODE_ENV === "development"
-           ? "http://192.168.0.88:3000"
-           : "/vue-admin/",
-    */
+    base:
+      env.NODE_ENV === "development"
+        ? "http://192.168.0.88:3000"
+        : "/vue-admin/",
     build: {
       outDir: "../server/app",
     },

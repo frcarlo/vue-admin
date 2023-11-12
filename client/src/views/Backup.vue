@@ -38,10 +38,12 @@ const toggleMount = async (item) => {
   } else {
     mount = true;
   }
-  await postMount("mount", { device: { ...item.raw, mount } });
+  await postMount(`${import.meta.env.VITE_API_URL}/mount`, {
+    device: { ...item.raw, mount },
+  });
   getList();
 };
-const getList = () => post("lsblk");
+const getList = () => post(`${import.meta.env.VITE_API_URL}/lsblk`);
 const showSnack = computed(() => !!error.value);
 const hasMountpoint = (device) => {
   if (isProxy(device)) device = toRaw(device);
@@ -139,9 +141,11 @@ const devices = computed(() => {
                       :color="hasMountpoint(item.raw) ? 'warning' : 'white'"
                       variant="plain"
                     >
-                      <v-icon size="32">{{
-                        hasMountpoint(item.raw) ? "mdi-eject" : "mdi-play"
-                      }}</v-icon>
+                      <v-icon size="32"
+                        >{{
+                          hasMountpoint(item.raw) ? "mdi-eject" : "mdi-play"
+                        }}
+                      </v-icon>
                     </v-btn>
                   </v-card-title>
                   <v-card-text>
