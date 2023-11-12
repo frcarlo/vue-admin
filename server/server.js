@@ -6,7 +6,7 @@ const express = require("express"),
     port = process.env.PORT || 3000,
     User = require("./api/models/userModel"),
     history = require('connect-history-api-fallback'),
-    rewrite = require("express-urlrewrite"),
+
     jsonwebtoken = require("jsonwebtoken");
 
 require('dotenv').config()
@@ -17,22 +17,16 @@ const appPath = __dirname + '/app/';
 const http = require('http');
 const server = http.createServer(app);
 const {Server} = require("socket.io");
-const whitelist = ["http://loalhost:3001", "/", "http://localhost:3001"]
+const whitelist = ["http://loalhost:3000", "/", "http://localhost:3001"]
 const io = new Server(server,
     {
         cors: {
-            origin: function (origin, callback) {
-
-                if (whitelist.indexOf(origin) !== -1) {
-
-                    callback(null, true)
-                } else {
-                    callback(new Error('Not allowed by CORS'))
-                }
-            },
+            origin: "*",
+            transports: ["websocket", "polling"],
             credentials: true
-        }
-    }
+        },
+        allowEIO3: true
+    },
 );
 app.set("io", io);
 const mongoose = require("mongoose");
@@ -71,7 +65,7 @@ if (process.env.NODE_ENV !== "development")
         logger
     }))
 
-app.use(rewrite("/vue-admin/*", "/$1"));
+
 app.use(history({}));
 app.use(cors());
 app.use(express.urlencoded({extended: false}));
@@ -100,7 +94,7 @@ app.use(function (req, res, next) {
 
 
 app.use(express.static(appPath));
-app.get("/", (req, res) => {
+app.get("/pong", (req, res) => {
     res.status(200).json({message: "alive"})
 })
 
@@ -124,7 +118,7 @@ io.on('connection', (socket) => {
     logger.info("New socket connection")
     socket.emit("message", {data: `${new Date().toDateString()} - you are connected`})
 });
-
+console.log("...")
 server.listen(port);
 
 console.log(" RESTful API server started on: " + port);

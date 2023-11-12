@@ -9,13 +9,17 @@ export function useSocket(url, listeners = []) {
   const state = ref(states);
   console.log("Connect to socket: " + appStore.base_url);
   const socket = io(appStore.base_url);
-  console.log("socket ...", url);
+
+  console.log("socket ...", socket);
   // Change connected state
   socket.on("connect", () => {
     console.log("Connected to socket ...");
     state.value.connected = true;
     state.value.id = socket.id;
     appStore.socketState(socket);
+  });
+  socket.on("connect_error", (error) => {
+    console.log(error);
   });
   socket.on("error", () => {
     console.log("Ups ...");

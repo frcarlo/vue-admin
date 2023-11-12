@@ -50,7 +50,7 @@ router.beforeEach(async (to) => {
   try {
     if (to.path !== "/login") {
       await api.post(
-        "/profile",
+        "/auth/profile",
         {},
         {
           headers: {
