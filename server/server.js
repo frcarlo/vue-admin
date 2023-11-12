@@ -65,10 +65,10 @@ mongoose
         }
     );
 
-
-app.use(pinoHTTP({
-    logger
-}))
+if (process.env.NODE_ENV !== "development")
+    app.use(pinoHTTP({
+        logger
+    }))
 
 app.use(history({}));
 app.use(cors());
@@ -119,7 +119,7 @@ app.use(function (error, request, response, next) {
     response.status(status).json({error: true, message: error.message});
 });
 io.on('connection', (socket) => {
-
+    logger.info("New socket connection")
     socket.emit("message", {data: `${new Date().toDateString()} - you are connected`})
 });
 

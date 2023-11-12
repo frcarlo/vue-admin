@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "nodemon ./server.js",
+    "start": "NODE_ENV=development nodemon ./server.js",
     "build": "docker buildx build -t frcarlo/vue-admin ."
   },
   "dependencies": {
