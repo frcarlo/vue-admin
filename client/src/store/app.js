@@ -14,6 +14,7 @@ export const useAppStore = defineStore("app", () => {
   };
 
   const base_url = ref(import.meta.env.VITE_API_BASE_URL);
+  const url_path = ref(import.meta.env.VITE_API_PATH_URL);
 
   const connected = computed(() => !!socket_id.value);
   const socketState = (socket = null) => {
@@ -30,6 +31,7 @@ export const useAppStore = defineStore("app", () => {
 
   return {
     logout,
+    url_path,
     token,
     signedIn,
     socketState,

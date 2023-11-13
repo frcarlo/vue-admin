@@ -8,7 +8,9 @@ export function useSocket(url, listeners = []) {
   listeners.forEach((l) => (states[l.name] = ""));
   const state = ref(states);
   console.log("Connect to socket: " + appStore.base_url);
-  const socket = io(appStore.base_url);
+  const socket = io(appStore.base_url, {
+    path: appStore.url_path + "/socket.io",
+  });
 
   console.log("socket ...", socket);
   // Change connected state
