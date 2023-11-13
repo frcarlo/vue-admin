@@ -10,7 +10,7 @@ export const useAppStore = defineStore("app", () => {
   const socket_id = ref(null);
   const logout = () => {
     token.value = null;
-    router.push("/login");
+    router.push({ name: "Login" });
   };
 
   const base_url = ref(
@@ -19,7 +19,7 @@ export const useAppStore = defineStore("app", () => {
       : import.meta.env.BASE_URL,
   );
 
-  const connected = computed(() => (socket_id.value ? true : false));
+  const connected = computed(() => !!socket_id.value);
   const socketState = (socket = null) => {
     if (!socket) {
       console.log("Reset socket ");

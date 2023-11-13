@@ -21,7 +21,7 @@ export function useAuth() {
         if (response.data?.token) {
           appStore.token = null;
           data.value = response.data;
-          router.push("/login");
+          router.push({ name: "Login" });
         }
       })
       .catch((err) => (error.value = err));
@@ -41,7 +41,7 @@ export function useAuth() {
         if (response.data?.token) {
           appStore.token = response.data.token;
           data.value = response.data;
-          router.push("/");
+          router.push({ name: "Home" });
         }
       })
       .catch((err) => (error.value = err));
