@@ -32,7 +32,7 @@ export function useAuth() {
     data.value = null;
     error.value = null;
     // toValue() unwraps potential refs or getters
-    console.log(import.meta.env.VITE_LOGIN_URL);
+
     api
       .post(toValue(import.meta.env.VITE_LOGIN_URL), payload, {
         headers: {},
