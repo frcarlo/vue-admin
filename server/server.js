@@ -40,7 +40,7 @@ mongoose
     .then(
         function () {
             //connected successfully
-            if (process.env.USER_EMAIL && rocess.env.USER_PASSWORD && process.env.USER_FULLNAME)
+            if (process.env.USER_EMAIL && process.env.USER_PASSWORD && process.env.USER_FULLNAME)
                 registerUser(
                     {
                         email: process.env.USER_EMAIL,
