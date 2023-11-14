@@ -201,17 +201,7 @@ const chartData = computed(() => {
     Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
     Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
   ];
-  if (data[0] > 5 && data[0] < 20) {
-    colors[0] = Utils.transparentize(Utils.CHART_COLORS.deepOrange, 0.1);
-  } else if (data[0] > 20) {
-    colors[0] = Utils.transparentize(Utils.CHART_COLORS.red, 0.1);
-  }
 
-  if (data[1] > 10 && data[0] < 20) {
-    colors[1] = Utils.transparentize(Utils.CHART_COLORS.deepOrange, 0.1);
-  } else if (data[1] > 20) {
-    colors[1] = Utils.transparentize(Utils.CHART_COLORS.red, 0.1);
-  }
   return {
     labels: ["Load"],
     datasets: [
