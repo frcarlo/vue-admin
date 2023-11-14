@@ -7,10 +7,8 @@ export function useSocket(url, listeners = []) {
   const appStore = useAppStore();
   listeners.forEach((l) => (states[l.name] = ""));
   const state = ref(states);
-  const newUrl = new URL(appStore.base_url);
-  console.log("Connect to socket: " + appStore.base_url, newUrl.pathname);
-  const socket = io(appStore.base_url, {
-    path: newUrl.pathname + "socket.io/",
+  const socket = io(`${appStore.base_url.origin}`, {
+    path: appStore.base_url.pathname.replace(/\/$/, "") + "/socket.io/",
   });
 
   console.log("socket ...", socket);

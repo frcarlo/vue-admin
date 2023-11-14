@@ -12,10 +12,11 @@ export function useApi() {
   const post = async (url, payload) => {
     error.value = null;
     loading.value = true;
-    const base_url = app.base_url;
+    console.log(app.base_url);
+    const base_url = app.base_url.href;
     console.log("execute: ", `${base_url}/${toValue(url)}`);
     try {
-      const result = await api.post(`${base_url}/${toValue(url)}`, payload, {
+      const result = await api.post(`${base_url}${toValue(url)}`, payload, {
         headers: {
           Authorization: `JWT ${app.token}`,
         },

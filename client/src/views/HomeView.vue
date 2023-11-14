@@ -6,14 +6,25 @@
     min-height="70vh"
     theme="dark"
   >
-    <v-row>
-      <v-spacer></v-spacer>
-      <v-col class="text-right text-subtitle-2">{{ timeDistanceString }}</v-col>
-    </v-row>
+    <div class="d-flex justify-end mr-4 mb-2">
+      <div class="text-right text-caption mr-4">{{ timeDistanceString }}</div>
+      <PowerMenue />
+    </div>
+    <!--    <v-row>-->
+    <!--      <v-spacer v-if="!mobile"></v-spacer>-->
+    <!--      -->
+    <!--      &lt;!&ndash;      <v-col class="text-right">Hello</v-col>&ndash;&gt;-->
+    <!--      &lt;!&ndash;      <v-col class="text-right text-caption">{{ timeDistanceString }}</v-col>&ndash;&gt;-->
+    <!--    </v-row>-->
     <v-row>
       <v-col sm="12">
         <v-card min-width="250" min-height="100" rounded="lg">
-          <v-card-item :title="`Host: ${system.hostname}`">
+          <v-card-item>
+            <template v-slot:title>
+              <v-card-title :class="{ 'text-subtitle-2': mobile }"
+                >Host: {{ system.hostname }}
+              </v-card-title>
+            </template>
             <template v-slot:subtitle>
               <v-card-subtitle
                 >{{ system.hr_name }} / {{ system.os_name }}
@@ -45,7 +56,10 @@
       </v-col>
       <v-col lg="6" sm="12">
         <v-card min-width="250" min-height="300" rounded="lg">
-          <v-card-item :title="quicklook.cpu_name"></v-card-item>
+          <v-card-title :class="{ 'text-subtitle-2': mobile }"
+            >{{ quicklook.cpu_name }}
+          </v-card-title>
+
           <v-card-text>
             <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
           </v-card-text>
@@ -53,7 +67,10 @@
       </v-col>
       <v-col lg="6" sm="12">
         <v-card min-width="250" min-height="300" rounded="lg">
-          <v-card-item :title="dockerVersion"></v-card-item>
+          <v-card-title :class="{ 'text-subtitle-2': mobile }">
+            {{ dockerVersion }}
+          </v-card-title>
+
           <v-card-text>
             <v-row>
               <v-col
@@ -89,6 +106,8 @@ import _ from "lodash";
 import * as Utils from "../composables/Utils";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { Bar } from "vue-chartjs";
+import { useDisplay } from "vuetify";
+import PowerMenue from "@/components/PowerMenue.vue";
 import {
   Chart as ChartJS,
   Colors,
@@ -109,7 +128,6 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
 );
-
 import { formatDistance } from "date-fns";
 import { useApi } from "@/composables/Api";
 
@@ -124,6 +142,7 @@ const chartOptions = ref({
   },
 });
 const lastTimeExecuted = ref(null);
+const { mobile } = useDisplay();
 
 // eslint-disable-next-line no-unused-vars
 const { post, data, error } = useApi();
@@ -150,8 +169,9 @@ const setDistance = () => {
     console.log("No data...");
     return;
   }
+
   timeDistance.value = {
-    distance: formatDistance(new Date(), Date.parse(data.executed_at)),
+    distance: formatDistance(new Date(), Date.parse(data.value.executed_at)),
   };
 };
 
@@ -162,52 +182,51 @@ const timeDistanceString = computed(() => {
     return "last refresh " + timeDistance.value.distance;
   }
 });
+
 const ip = computed(() => {
-  if (!data) return {};
-  const { ip } = data.sensors;
+  if (!data.value) return {};
+  const { ip } = data.value.sensors;
   return ip;
 });
 
-const colorByThreshold = (value, norm = 50, critical = 80) => {
+const colorByThreshold = (value, norm = 15, critical = 20, max = 101) => {
   if (_.inRange(value, norm)) {
     return Utils.transparentize(Utils.CHART_COLORS.green, 0.1);
   }
   if (_.inRange(value, norm, critical)) {
     return Utils.transparentize(Utils.CHART_COLORS.orange, 0.2);
   }
-  if (_.inRange(value, critical)) {
+  if (_.inRange(value, critical, max)) {
     return Utils.transparentize(Utils.CHART_COLORS.deepOrange, 0.1);
   }
 };
 const chartData = computed(() => {
-  console.log(quicklook.value.cpu);
-  const data = [quicklook.value.cpu, quicklook.value.mem, quicklook.value.swap];
-  const colors = [
-    Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
-    Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
-    Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
-  ];
-  if (data[0] > 5 && data[0] < 20) {
-    colors[0] = Utils.transparentize(Utils.CHART_COLORS.deepOrange, 0.1);
-  } else if (data[0] > 20) {
-    colors[0] = Utils.transparentize(Utils.CHART_COLORS.red, 0.1);
-  }
+  // console.log(quicklook.value.cpu);
+  // const data = [quicklook.value.cpu, quicklook.value.mem, quicklook.value.swap];
+  // const colors = [
+  //   Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
+  //   Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
+  //   Utils.transparentize(Utils.CHART_COLORS.green, 0.1),
+  // ];
 
-  if (data[1] > 10 && data[0] < 20) {
-    colors[1] = Utils.transparentize(Utils.CHART_COLORS.deepOrange, 0.1);
-  } else if (data[1] > 20) {
-    colors[1] = Utils.transparentize(Utils.CHART_COLORS.red, 0.1);
-  }
   return {
     labels: ["Load"],
     datasets: [
       {
         label: "CPU",
         data: [quicklook.value.cpu],
+        //barThickness: 60,
+        barPercentage: 0.7,
+
+        categoryPercentage: 0.5,
+
         backgroundColor: colorByThreshold(quicklook.value.cpu, 15, 20),
       },
       {
         label: "Memory",
+        //barThickness: 100,
+        categoryPercentage: 0.5,
+        barPercentage: 0.7,
         data: [quicklook.value.mem],
         backgroundColor: colorByThreshold(quicklook.value.mem, 18, 80),
       },
@@ -215,43 +234,43 @@ const chartData = computed(() => {
   };
 });
 const dockerContainer = computed(() => {
-  if (!data) return [];
+  if (!data.value) return [];
   console.log(docker.value.version.Platform.Name);
   return docker.value.containers;
 });
 const dockerVersion = computed(() => {
-  if (!data) return "";
+  if (!data.value) return "";
   console.log(docker.value.version.Platform.Name);
   return docker.value.version.Platform.Name;
 });
 const docker = computed(() => {
-  if (!data) return {};
+  if (!data.value) return {};
 
-  const { docker } = data.sensors;
+  const { docker } = data.value.sensors;
   return docker;
 });
 
 const quicklook = computed(() => {
-  if (!data) return {};
+  if (!data.value) return {};
 
-  const { quicklook } = data.sensors;
+  const { quicklook } = data.value.sensors;
   return quicklook;
 });
 const system = computed(() => {
-  if (!data) return {};
+  if (!data.value) return {};
 
-  const { system } = data.sensors;
+  const { system } = data.value.sensors;
   return system;
 });
 
 const alertMessage = computed(() => {
-  if (data) {
-    if (data.sensors.alert.length > 0)
+  if (data.value) {
+    if (data.value.sensors.alert.length > 0)
       return {
         message: `Alerts detected`,
         icon: "mdi-alert",
         color: "error",
-        data: data.sensors.alert,
+        data: data.value.sensors.alert,
       };
   }
   return {
@@ -262,8 +281,11 @@ const alertMessage = computed(() => {
   };
 });
 const getList = async () => {
-  await post("perfmon?sensors=cpu,system,alert,ip,quicklook,docker");
-  console.log("Set ...");
+  await post(
+    `${
+      import.meta.env.VITE_API_URL
+    }/perfmon?sensors=cpu,system,alert,ip,quicklook,docker`,
+  );
   setDistance();
 };
 </script>
