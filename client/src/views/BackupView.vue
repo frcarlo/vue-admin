@@ -19,16 +19,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => clearInterval(intervalId));
-/*watch(selected, (value, oldValue) => {
-  const item = _.first(selected.value);
-  let mount;
-  if(hasMountpoint(item))
-  postMount("mount", {
-    device: item
-      ? { ...item, mount }
-      : { ..._.first(oldValue), mount },
-  });
-});*/
 
 const toggleMount = async (item) => {
   let mount;

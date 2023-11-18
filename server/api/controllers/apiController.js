@@ -96,6 +96,14 @@ const socketExecute = (command, format = "json") => {
 
 }
 
+exports.power = async function (req, res) {
+
+    const {action} = req.body;
+    const result = socketExecute(action);
+
+
+}
+
 exports.lsblk = async function (req, res) {
     const command = [
         "lsblk",

@@ -8,7 +8,6 @@
   >
     <div class="d-flex justify-end mr-4 mb-2">
       <div class="text-right text-caption mr-4">{{ timeDistanceString }}</div>
-      <PowerMenue />
     </div>
     <!--    <v-row>-->
     <!--      <v-spacer v-if="!mobile"></v-spacer>-->
@@ -107,7 +106,7 @@ import * as Utils from "../composables/Utils";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { Bar } from "vue-chartjs";
 import { useDisplay } from "vuetify";
-import PowerMenue from "@/components/PowerMenue.vue";
+
 import {
   Chart as ChartJS,
   Colors,
@@ -235,12 +234,12 @@ const chartData = computed(() => {
 });
 const dockerContainer = computed(() => {
   if (!data.value) return [];
-  console.log(docker.value.version.Platform.Name);
+
   return docker.value.containers;
 });
 const dockerVersion = computed(() => {
   if (!data.value) return "";
-  console.log(docker.value.version.Platform.Name);
+
   return docker.value.version.Platform.Name;
 });
 const docker = computed(() => {

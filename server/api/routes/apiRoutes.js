@@ -10,5 +10,6 @@ module.exports = function (app) {
     app.route("/api/v1/lsblk").post(userHandlers.loginRequired, apiHandlers.lsblk);
     app.route("/api/v1/perfmon").post(userHandlers.loginRequired, apiHandlers.glances);
     app.route("/api/v1/mount").post(userHandlers.loginRequired, body("device").notEmpty(), apiHandlers.mountDevice);
+    app.route("/api/v1/power").post(userHandlers.loginRequired, body("action").isIn(["reboot", "shutdown"]).notEmpty(), apiHandlers.power);
 };
 

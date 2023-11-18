@@ -11,7 +11,6 @@ export function useSocket(url, listeners = []) {
     path: appStore.base_url.pathname.replace(/\/$/, "") + "/socket.io/",
   });
 
-  console.log("socket ...", socket);
   // Change connected state
   socket.on("connect", () => {
     console.log("Connected to socket ...");
