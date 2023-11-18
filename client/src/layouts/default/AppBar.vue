@@ -4,7 +4,7 @@
       v-model="snackbar"
       :timeout="5000"
       location="top right"
-      color="severity"
+      :color="severity"
     >
       {{ message }}
     </v-snackbar>
@@ -82,7 +82,7 @@ const message = ref("");
 const appStore = useAppStore();
 const interValId = ref(null);
 const snackbar = ref(false);
-const initActionDialog = { title: null, show: false, action: null };
+
 let actionDialog = reactive({ title: null, show: false, action: null });
 const rebootProgress = ref(false);
 const props = defineProps({
@@ -117,6 +117,11 @@ const action = () => {
   }
 };
 
+const setSnack = (message, sev = "info", show = true) => {
+  snackbar.value = show;
+  severity.value = sev;
+  message.value = message;
+};
 const cancel = () => {
   if (interValId.value) clearInterval(interValId.value);
   actionDialog.show = false;
@@ -136,21 +141,21 @@ const power = (action) => {
     if (interValId.value) clearInterval(interValId.value);
     interValId.value = setInterval(() => {
       c++;
-      
+
       if (c > 3) {
-        rebootProgress.value = false;
-        clearInterval(interValId.value);
-        actionDialog.show = false;
-        snackbar.value = true;
-        severity.value = "warn";
-        message.value =
-          "Ups ... the server is not available. Something seems to be wrong.";
+        cancel();
+        setSnack(
+          "Ups ... the server is not available. Something seems to be wrong.",
+          "orange",
+        );
       }
-      if (!appStore.connected) {
+      if (appStore.connected) {
         rebootProgress.value = false;
-        clearInterval(interValId.value);
+        cancel();
+
+        setSnack("The server has rebooted successfully", "blue");
       }
-    }, 6000);
+    }, 30000);
   } else {
     actionDialog.show = false;
   }
