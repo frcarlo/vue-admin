@@ -8,7 +8,4 @@
 <script setup>
 import DefaultBar from "./AppBar.vue";
 import DefaultView from "./View.vue";
-import Login from "@/views/Login.vue";
-
-const isLoggedIn = false;
 </script>

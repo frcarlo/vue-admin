@@ -11,5 +11,7 @@ module.exports = function (app) {
     app.route("/api/v1/perfmon").post(userHandlers.loginRequired, apiHandlers.glances);
     app.route("/api/v1/mount").post(userHandlers.loginRequired, body("device").notEmpty(), apiHandlers.mountDevice);
     app.route("/api/v1/power").post(userHandlers.loginRequired, body("action").isIn(["reboot", "shutdown"]).notEmpty(), apiHandlers.power);
+    app.route("/api/v1/backup").post(userHandlers.loginRequired, body("dry").isBoolean().notEmpty(), apiHandlers.backup);
+    app.route("/api/v1/backup-history").post(userHandlers.loginRequired, body("devices").isArray({min: 1}), apiHandlers.backupHistory);
 };
 

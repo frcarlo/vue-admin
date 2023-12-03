@@ -5,11 +5,13 @@
  */
 
 // Styles
+import "material-design-icons-iconfont/dist/material-design-icons.css"; // Ensure yo
 import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 
 // Composables
 import { createVuetify } from "vuetify";
+import { aliases, md } from "vuetify/iconsets/md";
 //import { VuetifyDateAdapter } from "vuetify/labs/date/adapters/vuetify";
 /*
 
@@ -35,8 +37,16 @@ export default createVuetify({
   },
 
    */
+  icons: {
+    defaultSet: "mdi",
+    aliases,
+    sets: {
+      md,
+    },
+  },
   theme: {
-    defaultTheme: "light",
+    defaultTheme: "dark",
+
     themes: {
       light: {
         colors: {

@@ -5,6 +5,8 @@ const express = require("express"),
     cors = require("cors"),
     port = process.env.PORT || 3000,
     User = require("./api/models/userModel"),
+    Backup = require("./api/models/backupModel"),
+
     history = require('connect-history-api-fallback'),
 
     jsonwebtoken = require("jsonwebtoken");
@@ -30,16 +32,21 @@ const io = new Server(server,
 );
 app.set("io", io);
 const mongoose = require("mongoose");
+
 const option = {
     dbName: "auth",
 };
 
 const mongoURI = process.env.MONGODB_URI;
+let BackupModel;
+//mongoose.model("User");
 mongoose
     .connect(`mongodb://${mongoURI}/?authMechanism=DEFAULT`, option)
     .then(
         function () {
             //connected successfully
+
+
             if (process.env.USER_EMAIL && process.env.USER_PASSWORD && process.env.USER_FULLNAME)
                 registerUser(
                     {
@@ -65,6 +72,11 @@ if (process.env.NODE_ENV !== "development")
         logger
     }))
 
+BackupModel = mongoose.model("Backup");
+
+BackupModel.watch((data) => {
+    console.log(data)
+})
 
 app.use(history({}));
 app.use(cors());
@@ -72,6 +84,9 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 app.use(function (req, res, next) {
+    req.io = io;
+
+    req.Backup = BackupModel;
     if (
         req.headers &&
         req.headers.authorization &&

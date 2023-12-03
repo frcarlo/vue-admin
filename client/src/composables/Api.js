@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store/app";
-import { ref, toValue, computed } from "vue";
+import { ref, toValue } from "vue";
 import api from "@/api/index";
 
 export function useApi() {
@@ -8,6 +8,7 @@ export function useApi() {
   const response = ref(null);
   const loading = ref(false);
   const error = ref(null);
+  const errorX = ref(null);
 
   const post = async (url, payload) => {
     error.value = null;
@@ -27,12 +28,16 @@ export function useApi() {
       );
       response.value = result;
       data.value = result.data;
-    } catch (error) {
-      error.value = error;
+    } catch (e) {
+      console.log(e.message);
+      error.value = e;
     } finally {
-      loading.value = false;
+      //loading.value = false;
+      setTimeout(() => {
+        loading.value = false;
+      }, 2000);
     }
   };
 
-  return { data, error, loading, response, post };
+  return { data, error, loading, errorX, response, post };
 }

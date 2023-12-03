@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
+  timeout: 5000,
   baseURL:
     import.meta.env.DEV === true
       ? import.meta.env.VITE_API_BASE_URL

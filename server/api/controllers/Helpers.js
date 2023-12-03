@@ -1,6 +1,7 @@
 const logger = require("../../lib/Logger");
 const {spawn} = require("child_process");
 const net = require("net");
+const _ = require("lodash")
 
 
 exports.fetchSensors = async (sensor = "all") => {
@@ -22,10 +23,10 @@ exports.fetchSensors = async (sensor = "all") => {
 }
 
 
-exports.spawnCommand = function (cmd, format = "json") {
+const spawnCommand = function (cmd, format = "json") {
     return new Promise((resolve, reject) => {
         try {
-            logger.debug(cmd);
+            logger.debug(cmd + " " + format);
             const child = spawn(cmd, {
                 shell: true
             });
@@ -41,15 +42,18 @@ exports.spawnCommand = function (cmd, format = "json") {
             }, 5000);
 
             child.stdout.on('data', (chunk) => {
+                logger.info(data.toString())
                 data.push(chunk);
             });
 
             child.stderr.on('data', (data) => {
+                console.log("ups")
                 reject(data)
 
             });
 
             child.on('error', (error) => {
+                console.log("Ups ")
                 reject(error)
             });
 
@@ -68,10 +72,13 @@ exports.spawnCommand = function (cmd, format = "json") {
 
             });
         } catch (error) {
+            console.log("Ups")
             reject(error)
         }
     });
 }
+
+exports.spawnCommand = spawnCommand;
 
 exports.createServer = function (socket) {
 

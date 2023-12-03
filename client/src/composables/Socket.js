@@ -17,6 +17,13 @@ export function useSocket(url, listeners = []) {
     state.value.connected = true;
     state.value.id = socket.id;
     appStore.socketState(socket);
+    socket.removeAllListeners();
+    listeners.forEach((listener) => {
+      socket.on(
+        listener.name,
+        (data, opts) => (state.value[listener.name] = listener.fn(data, opts)),
+      );
+    });
   });
   socket.on("connect_error", (error) => {
     console.log(error);
@@ -30,13 +37,6 @@ export function useSocket(url, listeners = []) {
     console.log("Ups ....");
     state.value.connected = false;
     appStore.socketState();
-  });
-
-  listeners.forEach((listener) => {
-    socket.on(
-      listener.name,
-      (data) => (state.value[listener.name] = listener.fn(data)),
-    );
   });
 
   return { state, socket };
